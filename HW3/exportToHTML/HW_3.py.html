@@ -1,0 +1,138 @@
+<html>
+<head>
+<title>HW_3.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: #999999; font-weight: normal; font-style: normal; }
+.s0 { color: rgb(0,0,128); font-weight: bold; }
+.s1 { color: rgb(0,0,0); }
+.s2 { color: rgb(0,0,255); }
+.s3 { color: rgb(0,128,128); font-weight: bold; }
+.s4 { color: rgb(128,128,128); font-style: italic; }
+</style>
+</head>
+<BODY BGCOLOR="#ffffff">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+HW_3.py</FONT>
+</center></TD></TR></TABLE>
+<pre>
+<span class="s0">import </span><span class="s1">math 
+</span><span class="s0">import </span><span class="s1">scipy.stats 
+</span><span class="s0">import </span><span class="s1">numpy </span><span class="s0">as </span><span class="s1">np 
+</span><span class="s0">import </span><span class="s1">sklearn.metrics </span><span class="s0">as </span><span class="s1">met 
+ 
+ 
+</span><span class="s0">def </span><span class="s1">question_one(x): 
+    y = x + </span><span class="s2">0.3</span><span class="s1"> 
+    array = np.array([(x_i, y_i) </span><span class="s0">for </span><span class="s1">(x_i, y_i) </span><span class="s0">in </span><span class="s1">zip(x, y)]) 
+    print(</span><span class="s3">&quot;the average of x = &quot;</span><span class="s1">, np.average(array[:, </span><span class="s2">0</span><span class="s1">]), </span><span class="s3">&quot;; the average of y = &quot;</span><span class="s1">, np.average(array[:, </span><span class="s2">1</span><span class="s1">])) 
+    </span><span class="s0">return </span><span class="s1">beta_function(array[:, </span><span class="s2">0</span><span class="s1">], array[:, </span><span class="s2">1</span><span class="s1">]) 
+ 
+ 
+</span><span class="s0">def </span><span class="s1">question_two(dimensions, maxD): 
+    values = split_helper(dimensions, maxD) 
+    print(values) 
+    </span><span class="s0">return </span><span class="s1">values 
+ 
+ 
+</span><span class="s0">def </span><span class="s1">split_helper(dimensions, maxD): 
+    maes = [] 
+    split_points_x = [</span><span class="s2">0</span><span class="s1">, </span><span class="s2">25</span><span class="s1">, </span><span class="s2">50</span><span class="s1">, </span><span class="s2">75</span><span class="s1">, </span><span class="s2">100</span><span class="s1">] 
+    </span><span class="s0">if </span><span class="s1">maxD != </span><span class="s2">0</span><span class="s1">: 
+        </span><span class="s0">for </span><span class="s1">x </span><span class="s0">in </span><span class="s1">range(</span><span class="s2">0</span><span class="s1">, </span><span class="s2">2</span><span class="s1">): 
+            </span><span class="s0">for </span><span class="s1">i </span><span class="s0">in </span><span class="s1">split_points_x: 
+                d1 = {} 
+                d2 = {} 
+                </span><span class="s0">for </span><span class="s1">k, v </span><span class="s0">in </span><span class="s1">dimensions.items(): 
+                    </span><span class="s0">if </span><span class="s1">k[x] &lt;= i: 
+                        d1.update({k: v}) 
+                    </span><span class="s0">else</span><span class="s1">: 
+                        d2.update({k: v}) 
+                mae_value = mean_absolute_error(d1, d2) 
+                maes.append([i, x, mae_value]) 
+        minimum = sorted((el </span><span class="s0">for </span><span class="s1">el </span><span class="s0">in </span><span class="s1">maes), key=</span><span class="s0">lambda </span><span class="s1">L: L[</span><span class="s2">2</span><span class="s1">], reverse = </span><span class="s0">False</span><span class="s1">)[</span><span class="s2">0</span><span class="s1">] 
+        print(minimum) 
+        cut(minimum[</span><span class="s2">0</span><span class="s1">], minimum[</span><span class="s2">1</span><span class="s1">], dimensions, maxD) 
+    </span><span class="s0">else</span><span class="s1">: 
+        </span><span class="s0">return</span><span class="s1"> 
+ 
+ 
+</span><span class="s0">def </span><span class="s1">cut(split_value, axis, dimensions, maxD): 
+    d1 = {} 
+    d2 = {} 
+    </span><span class="s0">if </span><span class="s1">axis == </span><span class="s2">0</span><span class="s1">: 
+        print(split_value, </span><span class="s3">&quot;x&quot;</span><span class="s1">) 
+    </span><span class="s0">else</span><span class="s1">: 
+        print(split_value, </span><span class="s3">&quot;y&quot;</span><span class="s1">) 
+    </span><span class="s0">for </span><span class="s1">k, v </span><span class="s0">in </span><span class="s1">dimensions.items(): 
+        </span><span class="s0">if </span><span class="s1">k[axis] &lt;= split_value: 
+            d1.update({k: v}) 
+        </span><span class="s0">else</span><span class="s1">: 
+            d2.update({k: v}) 
+    split_helper(d1, maxD - </span><span class="s2">1</span><span class="s1">) 
+    split_helper(d2, maxD - </span><span class="s2">1</span><span class="s1">) 
+ 
+ 
+</span><span class="s0">def </span><span class="s1">mean_absolute_error(part1, part2): 
+    </span><span class="s0">if </span><span class="s1">len(part1) == </span><span class="s2">0 </span><span class="s0">or </span><span class="s1">len(part2) == </span><span class="s2">0</span><span class="s1">: 
+        </span><span class="s0">return </span><span class="s1">float(</span><span class="s3">&quot;inf&quot;</span><span class="s1">) 
+    </span><span class="s0">else</span><span class="s1">: 
+        part1_ave = [sum(part1.values()) / len(part1)] * len(part1) 
+        part2_ave = [sum(part2.values()) / len(part2)] * len(part2) 
+        mae_part1 = met.mean_absolute_error(list(part1.values()), part1_ave) 
+        mae_part2 = met.mean_absolute_error(list(part2.values()), part2_ave) 
+        </span><span class="s0">return </span><span class="s1">mae_part1 + mae_part2 
+ 
+    </span><span class="s4"># if len(part1) == 0 and len(part2) != 0:</span><span class="s1"> 
+    </span><span class="s4">#     part2_ave = [sum(part2.values()) / len(part2)] * len(part2)</span><span class="s1"> 
+    </span><span class="s4">#     mae_part2 = met.mean_absolute_error(list(part2.values()), part2_ave)</span><span class="s1"> 
+    </span><span class="s4">#     return mae_part2</span><span class="s1"> 
+    </span><span class="s4"># elif len(part2) == 0 and len(part1) != 0:</span><span class="s1"> 
+    </span><span class="s4">#     part1_ave = [sum(part1.values()) / len(part1)] * len(part1)</span><span class="s1"> 
+    </span><span class="s4">#     mae_part1 = met.mean_absolute_error(list(part1.values()), part1_ave)</span><span class="s1"> 
+    </span><span class="s4">#     return mae_part1</span><span class="s1"> 
+    </span><span class="s4"># elif len(part2) != 0 and len(part1) != 0:</span><span class="s1"> 
+    </span><span class="s4">#     part1_ave = [sum(part1.values()) / len(part1)] * len(part1)</span><span class="s1"> 
+    </span><span class="s4">#     part2_ave = [sum(part2.values()) / len(part2)] * len(part2)</span><span class="s1"> 
+    </span><span class="s4">#     mae_part1 = met.mean_absolute_error(list(part1.values()), part1_ave)</span><span class="s1"> 
+    </span><span class="s4">#     mae_part2 = met.mean_absolute_error(list(part2.values()), part2_ave)</span><span class="s1"> 
+    </span><span class="s4">#     return mae_part1 + mae_part2</span><span class="s1"> 
+    </span><span class="s4"># else:</span><span class="s1"> 
+    </span><span class="s4">#     return float(0)</span><span class="s1"> 
+ 
+ 
+</span><span class="s0">def </span><span class="s1">question_four(x_values, y_values): 
+    beta_1 = beta_function(x_values, y_values) 
+    x_ave = np.average(x_values) 
+    y_ave = np.average(y_values) 
+    beta_0 = y_ave - beta_1 * x_ave 
+    temp = </span><span class="s2">54 </span><span class="s1">* beta_1 + beta_0 
+    y_hat = x_values * beta_1 + beta_0 
+    sig_square = </span><span class="s2">0</span><span class="s1"> 
+    </span><span class="s0">for </span><span class="s1">a, b </span><span class="s0">in </span><span class="s1">zip(y_values, y_hat): 
+        sig_square = sig_square + (((a - b) ** </span><span class="s2">2</span><span class="s1">) / len(y_values)) 
+    p = scipy.stats.norm(temp, math.sqrt(sig_square)).cdf(temp - (</span><span class="s2">65 </span><span class="s1">- temp)) 
+    </span><span class="s0">return </span><span class="s1">p 
+ 
+ 
+</span><span class="s0">def </span><span class="s1">beta_function(x, y): 
+    </span><span class="s0">return </span><span class="s1">sum([(x_i - np.average(x)) * (y_i - np.average(y)) </span><span class="s0">for </span><span class="s1">(x_i, y_i) </span><span class="s0">in </span><span class="s1">zip(x, y)]) / sum([(x_i - np.average(x)) ** </span><span class="s2">2 </span><span class="s0">for </span><span class="s1">x_i </span><span class="s0">in </span><span class="s1">x]) 
+ 
+ 
+</span><span class="s0">if </span><span class="s1">__name__ == </span><span class="s3">'__main__'</span><span class="s1">: 
+    x_values_1 = np.array([</span><span class="s2">8</span><span class="s1">, </span><span class="s2">21</span><span class="s1">, </span><span class="s2">33</span><span class="s1">, </span><span class="s2">35</span><span class="s1">, </span><span class="s2">37</span><span class="s1">, </span><span class="s2">48</span><span class="s1">, </span><span class="s2">58</span><span class="s1">, </span><span class="s2">77</span><span class="s1">, </span><span class="s2">79</span><span class="s1">, </span><span class="s2">84</span><span class="s1">])                </span><span class="s4">#for question 1</span><span class="s1"> 
+    x_values_4 = np.array([</span><span class="s2">88</span><span class="s1">, </span><span class="s2">98</span><span class="s1">, </span><span class="s2">31</span><span class="s1">, </span><span class="s2">15</span><span class="s1">, </span><span class="s2">66</span><span class="s1">, </span><span class="s2">49</span><span class="s1">, </span><span class="s2">9</span><span class="s1">, </span><span class="s2">69</span><span class="s1">, </span><span class="s2">55</span><span class="s1">, </span><span class="s2">60</span><span class="s1">])                </span><span class="s4">#for question 4</span><span class="s1"> 
+    y_values_4 = np.array([</span><span class="s2">93</span><span class="s1">, </span><span class="s2">90</span><span class="s1">, </span><span class="s2">41</span><span class="s1">, </span><span class="s2">17</span><span class="s1">, </span><span class="s2">75</span><span class="s1">, </span><span class="s2">51</span><span class="s1">, </span><span class="s2">18</span><span class="s1">, </span><span class="s2">85</span><span class="s1">, </span><span class="s2">78</span><span class="s1">, </span><span class="s2">50</span><span class="s1">])               </span><span class="s4">#for question 4</span><span class="s1"> 
+    points = {(</span><span class="s2">12</span><span class="s1">, </span><span class="s2">12</span><span class="s1">): </span><span class="s2">12</span><span class="s1">, (</span><span class="s2">12</span><span class="s1">, </span><span class="s2">37</span><span class="s1">): </span><span class="s2">24</span><span class="s1">, (</span><span class="s2">12</span><span class="s1">, </span><span class="s2">62</span><span class="s1">): </span><span class="s2">42</span><span class="s1">, (</span><span class="s2">12</span><span class="s1">, </span><span class="s2">87</span><span class="s1">): </span><span class="s2">46</span><span class="s1">, 
+              (</span><span class="s2">37</span><span class="s1">, </span><span class="s2">12</span><span class="s1">): </span><span class="s2">18</span><span class="s1">, (</span><span class="s2">37</span><span class="s1">, </span><span class="s2">37</span><span class="s1">): </span><span class="s2">40</span><span class="s1">, (</span><span class="s2">37</span><span class="s1">, </span><span class="s2">62</span><span class="s1">): </span><span class="s2">47</span><span class="s1">, (</span><span class="s2">37</span><span class="s1">, </span><span class="s2">87</span><span class="s1">): </span><span class="s2">71</span><span class="s1">, 
+              (</span><span class="s2">62</span><span class="s1">, </span><span class="s2">12</span><span class="s1">): </span><span class="s2">37</span><span class="s1">, (</span><span class="s2">62</span><span class="s1">, </span><span class="s2">37</span><span class="s1">): </span><span class="s2">53</span><span class="s1">, (</span><span class="s2">62</span><span class="s1">, </span><span class="s2">62</span><span class="s1">): </span><span class="s2">58</span><span class="s1">, (</span><span class="s2">62</span><span class="s1">, </span><span class="s2">87</span><span class="s1">): </span><span class="s2">80</span><span class="s1">, 
+              (</span><span class="s2">87</span><span class="s1">, </span><span class="s2">12</span><span class="s1">): </span><span class="s2">49</span><span class="s1">, (</span><span class="s2">87</span><span class="s1">, </span><span class="s2">37</span><span class="s1">): </span><span class="s2">63</span><span class="s1">, (</span><span class="s2">87</span><span class="s1">, </span><span class="s2">62</span><span class="s1">): </span><span class="s2">81</span><span class="s1">, (</span><span class="s2">87</span><span class="s1">, </span><span class="s2">87</span><span class="s1">): </span><span class="s2">91</span><span class="s1">} 
+    question_two(points, </span><span class="s2">3</span><span class="s1">) 
+    answer1 = question_one(x_values_1) 
+    print(</span><span class="s3">&quot;without the value change, the value of beta_1 is: &quot;</span><span class="s1">, answer1) 
+    answer4 = question_four(x_values_4, y_values_4) 
+    print(</span><span class="s3">&quot;the answer of question 4 is: &quot;</span><span class="s1">, answer4)</span></pre>
+</body>
+</html>
